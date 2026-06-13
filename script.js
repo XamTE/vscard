@@ -107,7 +107,6 @@ const bindCopyEvent = (element, getValue, successMessage) => {
 
   element.addEventListener("click", async (event) => {
     event.preventDefault();
-
     await handleCopy(getValue(element), successMessage);
   });
 };
