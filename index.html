@@ -43,7 +43,10 @@
           </span>
           <span class="info-text">
             <span class="label">Email</span>
-            <a class="value" href="mailto:khwoo990@naver.com">khwoo990@naver.com</a>
+            <span class="value-line">
+              <a class="value" href="mailto:khwoo990@naver.com" aria-describedby="emailCopyStatus">khwoo990@naver.com</a>
+              <span class="inline-copy-status" id="emailCopyStatus" data-copy-status role="status" aria-live="polite"></span>
+            </span>
           </span>
         </li>
 
@@ -56,7 +59,10 @@
           </span>
           <span class="info-text">
             <span class="label">Phone</span>
-            <a class="value" href="tel:+821023986117">010-2398-6117</a>
+            <span class="value-line">
+              <a class="value" href="tel:+821023986117" aria-describedby="phoneCopyStatus">010-2398-6117</a>
+              <span class="inline-copy-status" id="phoneCopyStatus" data-copy-status role="status" aria-live="polite"></span>
+            </span>
           </span>
         </li>
       </ul>
@@ -64,9 +70,15 @@
       <div class="actions">
         <a class="button primary" href="mailto:khwoo990@naver.com">이메일 보내기</a>
         <a class="button primary" href="tel:+821023986117">전화 걸기</a>
+        <a
+          class="button github-button"
+          href="https://github.com/XamTE"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          My Github
+        </a>
       </div>
-
-      <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
     </section>
   </main>
 </body>

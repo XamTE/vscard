@@ -1,9 +1,9 @@
 "use strict";
 
-const copyStatus = document.querySelector("#copyStatus");
 const emailLinks = document.querySelectorAll('a.value[href^="mailto:"]');
 const phoneLinks = document.querySelectorAll('a.value[href^="tel:"]');
 const COPY_STATUS_DURATION = 1800;
+const COPY_STATUS_FADE_DURATION = 160;
 
 const normalizeText = (text) => (text || "").replace(/\s+/g, " ").trim();
 
@@ -70,20 +70,53 @@ const copyTextToClipboard = async (text) => {
   }
 };
 
-const setCopyStatus = (message) => {
-  if (!copyStatus) {
+const clearCopyStatus = (statusElement) => {
+  if (!statusElement) {
     return;
   }
 
-  copyStatus.textContent = message;
+  window.clearTimeout(statusElement.copyTimer);
+  window.clearTimeout(statusElement.clearTextTimer);
+  statusElement.classList.remove("is-visible");
+  statusElement.textContent = "";
+};
 
-  window.clearTimeout(setCopyStatus.timer);
-  setCopyStatus.timer = window.setTimeout(() => {
-    copyStatus.textContent = "";
+const clearOtherCopyStatuses = (currentStatusElement) => {
+  document.querySelectorAll("[data-copy-status]").forEach((statusElement) => {
+    if (statusElement !== currentStatusElement) {
+      clearCopyStatus(statusElement);
+    }
+  });
+};
+
+const getCopyStatusElement = (element) => {
+  return element.closest(".info-text")?.querySelector("[data-copy-status]") || null;
+};
+
+const setCopyStatus = (sourceElement, message) => {
+  const statusElement = getCopyStatusElement(sourceElement);
+
+  if (!statusElement) {
+    return;
+  }
+
+  clearOtherCopyStatuses(statusElement);
+  window.clearTimeout(statusElement.copyTimer);
+  window.clearTimeout(statusElement.clearTextTimer);
+
+  statusElement.textContent = message;
+  statusElement.classList.add("is-visible");
+
+  statusElement.copyTimer = window.setTimeout(() => {
+    statusElement.classList.remove("is-visible");
+
+    statusElement.clearTextTimer = window.setTimeout(() => {
+      statusElement.textContent = "";
+    }, COPY_STATUS_FADE_DURATION);
   }, COPY_STATUS_DURATION);
 };
 
-const handleCopy = async (value, successMessage) => {
+const handleCopy = async (sourceElement, value, successMessage) => {
   const text = normalizeText(value);
 
   if (!text) {
@@ -92,9 +125,9 @@ const handleCopy = async (value, successMessage) => {
 
   try {
     await copyTextToClipboard(text);
-    setCopyStatus(successMessage);
+    setCopyStatus(sourceElement, successMessage);
   } catch {
-    setCopyStatus("복사에 실패했습니다. 값을 직접 선택해 주세요.");
+    setCopyStatus(sourceElement, "복사 실패");
   }
 };
 
@@ -107,7 +140,7 @@ const bindCopyEvent = (element, getValue, successMessage) => {
 
   element.addEventListener("click", async (event) => {
     event.preventDefault();
-    await handleCopy(getValue(element), successMessage);
+    await handleCopy(element, getValue(element), successMessage);
   });
 };
 
@@ -118,7 +151,7 @@ emailLinks.forEach((link) => {
       const hrefEmail = getEmailFromMailto(element.getAttribute("href"));
       return hrefEmail || element.textContent;
     },
-    "이메일을 복사했습니다."
+    "이메일 복사됨"
   );
 });
 
@@ -130,6 +163,6 @@ phoneLinks.forEach((link) => {
       const hrefPhone = getPhoneFromTel(element.getAttribute("href"));
       return visiblePhone || hrefPhone;
     },
-    "전화번호를 복사했습니다."
+    "전화번호 복사됨"
   );
 });
