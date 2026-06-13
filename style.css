@@ -48,6 +48,25 @@ body {
   background: var(--card-bg);
   box-shadow: var(--shadow);
   overflow: hidden;
+  transform: translateY(0);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary);
+    box-shadow: 0 38px 96px rgba(0, 0, 0, 0.68);
+  }
+}
+
+.card:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: 0 34px 88px rgba(0, 0, 0, 0.64);
 }
 
 .cover {
@@ -276,5 +295,20 @@ body {
 
   .actions {
     grid-template-columns: 1fr;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .button {
+    transition: none;
+  }
+
+  .card:hover,
+  .card:focus-within,
+  .button:hover,
+  .button:focus-visible {
+    transform: none;
   }
 }

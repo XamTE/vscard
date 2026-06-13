@@ -1,9 +1,8 @@
 "use strict";
 
 const copyStatus = document.querySelector("#copyStatus");
-const emailLinks = document.querySelectorAll('a[href^="mailto:"]:not(.button)');
-const phoneLinks = document.querySelectorAll('a[href^="tel:"]:not(.button)');
-const inlineCopyTargets = document.querySelectorAll('.value[data-copy-value]:not(.button)');
+const emailLinks = document.querySelectorAll('a.value[href^="mailto:"]');
+const phoneLinks = document.querySelectorAll('a.value[href^="tel:"]');
 const COPY_STATUS_DURATION = 1800;
 
 const normalizeText = (text) => (text || "").replace(/\s+/g, " ").trim();
@@ -99,7 +98,7 @@ const handleCopy = async (value, successMessage) => {
   }
 };
 
-const bindCopyEvent = (element, getValue, defaultSuccessMessage) => {
+const bindCopyEvent = (element, getValue, successMessage) => {
   if (!element || element.dataset.copyBound === "true") {
     return;
   }
@@ -109,50 +108,9 @@ const bindCopyEvent = (element, getValue, defaultSuccessMessage) => {
   element.addEventListener("click", async (event) => {
     event.preventDefault();
 
-    const value = getValue(element);
-    const successMessage = element.dataset.successMessage || defaultSuccessMessage;
-
-    await handleCopy(value, successMessage);
+    await handleCopy(getValue(element), successMessage);
   });
 };
-
-const isCopyButton = (element) => {
-  const text = normalizeText(element.textContent);
-  const label = normalizeText(element.getAttribute("aria-label"));
-  const title = normalizeText(element.getAttribute("title"));
-  const copyKeywordText = `${text} ${label} ${title}`;
-  const isButtonLike = element.matches('button, [role="button"], .button');
-  const hasCopyValue = element.hasAttribute("data-copy-value");
-  const hasCopyKeyword = /복사|copy/i.test(copyKeywordText);
-
-  return isButtonLike && (hasCopyValue || hasCopyKeyword);
-};
-
-const removeDuplicateCopyButtons = () => {
-  document
-    .querySelectorAll('button, [role="button"], .button')
-    .forEach((element) => {
-      if (isCopyButton(element)) {
-        element.remove();
-      }
-    });
-
-  document.querySelectorAll(".actions").forEach((actions) => {
-    if (!normalizeText(actions.textContent) && actions.children.length === 0) {
-      actions.remove();
-    }
-  });
-};
-
-removeDuplicateCopyButtons();
-
-inlineCopyTargets.forEach((target) => {
-  bindCopyEvent(
-    target,
-    (element) => element.dataset.copyValue || element.textContent,
-    "복사했습니다."
-  );
-});
 
 emailLinks.forEach((link) => {
   bindCopyEvent(
