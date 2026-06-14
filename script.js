@@ -2,6 +2,7 @@
 
 const emailLinks = document.querySelectorAll('a.value[href^="mailto:"]');
 const phoneLinks = document.querySelectorAll('a.value[href^="tel:"]');
+const portfolioButton = document.querySelector(".portfolio-button");
 const COPY_STATUS_DURATION = 1800;
 const COPY_STATUS_FADE_DURATION = 160;
 
@@ -166,3 +167,9 @@ phoneLinks.forEach((link) => {
     "전화번호 복사됨"
   );
 });
+if (portfolioButton) {
+  portfolioButton.addEventListener("click", (event) => {
+    event.preventDefault();
+  });
+}
+

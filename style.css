@@ -274,12 +274,23 @@ body {
   background: var(--primary);
 }
 
+.portfolio-button,
 .github-button {
   grid-column: 1 / -1;
   min-height: 50px;
   border-radius: 14px;
-  color: var(--primary);
   letter-spacing: 0.02em;
+}
+
+.portfolio-button {
+  color: var(--sub-text);
+  background: #0f160d;
+  border-color: rgba(96, 117, 24, 0.62);
+}
+
+
+.github-button {
+  color: var(--primary);
 }
 
 .button:hover,
@@ -298,6 +309,8 @@ body {
   border-color: #607518;
 }
 
+.portfolio-button:hover,
+.portfolio-button:focus-visible,
 .github-button:hover,
 .github-button:focus-visible {
   color: #ffffff;
@@ -345,6 +358,7 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .portfolio-button,
   .github-button {
     grid-column: auto;
   }
